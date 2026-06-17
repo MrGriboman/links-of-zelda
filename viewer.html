@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legend of Zelda Links</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  color: white;
+  background:
+    radial-gradient(circle at top, #315031 0%, #1b2e1b 40%, #0b120b 100%);
+  min-height: 100vh;
+}
+
+header {
+  text-align: center;
+  padding: 40px 20px;
+  border-bottom: 3px solid gold;
+  background: rgba(0,0,0,.35);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 3rem;
+  color: gold;
+  text-shadow: 0 0 20px rgba(255,215,0,.5);
+}
+
+header p {
+  color: #ddd;
+  margin-top: 10px;
+}
+
+main {
+  max-width: 1400px;
+  margin: auto;
+  padding: 30px;
+}
+
+.viewer {
+  background: rgba(255,255,255,.05);
+  border: 2px solid rgba(255,215,0,.3);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 0 30px rgba(0,0,0,.4);
+}
+
+#gameTitle {
+  text-align: center;
+  font-size: 2rem;
+  color: gold;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.imageContainer {
+  display: flex;
+  justify-content: center;
+}
+
+#mainImage {
+  max-width: 100%;
+  max-height: 650px;
+  border-radius: 12px;
+  background: white;
+  padding: 10px;
+  box-shadow: 0 0 25px rgba(255,255,255,.15);
+  transition: transform .3s ease;
+}
+
+#mainImage:hover {
+  transform: scale(1.02);
+}
+
+.navButtons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+#buttons {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+button {
+  background: linear-gradient(#e4c34b, #b18a12);
+  color: #111;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px gold;
+}
+
+footer {
+  text-align: center;
+  padding: 30px;
+  color: #bbb;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>⚔ Legend of Zelda Links ⚔</h1>
+  <p>Explore Link's appearance throughout the series</p>
+</header>
+
+<main>
+  <div class="viewer">
+
+    <div id="gameTitle"></div>
+
+    <div class="imageContainer">
+      <img id="mainImage" alt="Link">
+    </div>
+
+    <div class="navButtons">
+      <button id="prevBtn">⬅ Previous</button>
+      <button id="nextBtn">Next ➡</button>
+    </div>
+
+    <div id="buttons"></div>
+
+  </div>
+</main>
+
+<footer>
+  HYAAAAH!
+</footer>
+
+<script>
+const images = [
+  {
+    label: "The Legend of Zelda (1986)",
+    url: "images/1986.png"
+  },
+  {
+    label: "Adventure of Link",
+    url: "images/zelda2.png"
+  },
+  {
+    label: "A Link to the Past",
+    url: "images/alttp.png"
+  },
+  {
+    label: "Link's Awakening",
+    url: "images/la.png"
+  },
+  {
+    label: "Ocarina of Time",
+    url: "https://cdn.wikimg.net/en/zeldawiki/images/5/51/OoT_Link_Model.png"
+  },
+  {
+    label: "The Wind Waker",
+    url: "https://cdn.wikimg.net/en/zeldawiki/images/7/7b/TWW_Link_Model.png"
+  },
+  {
+    label: "The Minish Cap",
+    url: "images/tmc.png"
+  },
+  {
+    label: "Twilight Princess",
+    url: "https://cdn.wikimg.net/en/zeldawiki/images/8/88/TPHD_Link_Model.png"
+  },
+  {
+    label: "Phantom Hourglass",
+    url: "https://cdn.wikimg.net/en/zeldawiki/images/d/df/PH_Link_Model.png"
+  },
+  {
+    label: "Spirit Tracks",
+    url: "https://cdn.wikimg.net/en/zeldawiki/images/1/1a/ST_Link_Engineer%27s_Clothes_Model.png"
+  },
+  {
+    label: "Skyward Sword",
+    url: "https://cdn.wikimg.net/en/zeldawiki/images/4/46/SSHD_Link_Model.png"
+  },
+  {
+    label: "A Link Between Worlds",
+    url: "images/albw.png"
+  },
+  {
+    label: "Breath of the Wild",
+    url: "https://cdn.wikimg.net/en/zeldawiki/images/7/73/BotW_Link_Model.png"
+  },
+  {
+    label: "Link's Awakening Remake",
+    url: "https://cdn.wikimg.net/en/zeldawiki/images/4/48/LANS_Link_Model.png"
+  },
+  {
+    label: "Tears of the Kingdom",
+    url: "images/totk.jpg"
+  }
+];
+
+const image = document.getElementById("mainImage");
+const buttons = document.getElementById("buttons");
+const title = document.getElementById("gameTitle");
+
+let currentIndex = 0;
+
+function showImage(index) {
+  currentIndex = index;
+  image.src = images[index].url;
+  title.textContent = images[index].label;
+}
+
+showImage(0);
+
+images.forEach((item, index) => {
+  const button = document.createElement("button");
+  button.textContent = item.label;
+
+  button.addEventListener("click", () => {
+    showImage(index);
+  });
+
+  buttons.appendChild(button);
+});
+
+document.getElementById("prevBtn").addEventListener("click", () => {
+  showImage((currentIndex - 1 + images.length) % images.length);
+});
+
+document.getElementById("nextBtn").addEventListener("click", () => {
+  showImage((currentIndex + 1) % images.length);
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowLeft") {
+    showImage((currentIndex - 1 + images.length) % images.length);
+  }
+
+  if (event.key === "ArrowRight") {
+    showImage((currentIndex + 1) % images.length);
+  }
+});
+</script>
+
+</body>
+</html>
