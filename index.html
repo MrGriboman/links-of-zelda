@@ -52,31 +52,51 @@ main {
   box-shadow: 0 0 30px rgba(0,0,0,.4);
 }
 
-#gameTitle {
-  text-align: center;
-  font-size: 2rem;
-  color: gold;
-  margin-bottom: 20px;
-  font-weight: bold;
+#gameTitle { 
+  text-align: center; 
+  font-size: 2rem; 
+  color: gold; 
+  margin-bottom: 20px; 
+  font-weight: bold; 
+  transition: opacity .35s ease, transform .35s ease; 
+} 
+
+#gameTitle.hide { 
+  opacity: 0; 
+  transform: translateY(-12px); 
 }
 
-.imageContainer {
+.imageContainer { 
   display: flex;
   justify-content: center;
+  perspective: 1500px; 
 }
 
-#mainImage {
-  max-width: 100%;
+#mainImage { max-width: 100%;
   max-height: 650px;
   border-radius: 12px;
-  background: white;
-  padding: 10px;
-  box-shadow: 0 0 25px rgba(255,255,255,.15);
-  transition: transform .3s ease;
-}
+  background: white; 
+  padding: 10px; 
+  box-shadow: 0 0 25px rgba(255,255,255,.15), 0 0 50px rgba(255,215,0,.08); 
+  opacity: 1; 
+  backface-visibility: hidden;
+  transition: opacity .45s ease, transform .55s ease, filter .45s ease; 
+} 
 
-#mainImage:hover {
-  transform: scale(1.02);
+#mainImage.show { 
+  opacity: 1; 
+  filter: blur(0); 
+  transform: rotateY(0deg) scale(1); 
+} 
+
+#mainImage.hide { 
+  opacity: 0; 
+  filter: blur(4px); 
+  transform: rotateY(180deg) scale(.9); 
+} 
+
+#mainImage:hover { 
+  transform: scale(1.02); 
 }
 
 .navButtons {
@@ -108,6 +128,11 @@ button {
 button:hover {
   transform: translateY(-2px);
   box-shadow: 0 0 15px gold;
+}
+
+.gameButton.active { 
+  box-shadow: 0 0 18px gold, 0 0 35px rgba(255,215,0,.4); 
+  transform: translateY(-2px); 
 }
 
 footer {
@@ -229,22 +254,46 @@ const images = [
 ];
 
 const image = document.getElementById("mainImage");
+image.classList.add("show");
 const buttons = document.getElementById("buttons");
 const title = document.getElementById("gameTitle");
 
 let currentIndex = 0;
 
-function showImage(index) {
-  currentIndex = index;
-  image.src = images[index].url;
-  title.textContent = images[index].label;
+function showImage(index) { 
+  currentIndex = index; 
+  image.classList.remove("show"); 
+  image.classList.add("hide"); 
+  title.classList.add("hide"); 
+  setTimeout(() => { 
+    image.src = images[index].url; 
+    title.textContent = images[index].label; 
+    document.querySelectorAll(".gameButton").forEach(btn => { 
+      btn.classList.remove("active"); 
+  }); 
+  document 
+    .querySelector(`[data-index="${index}"]`) 
+    ?.classList.add("active"); 
+    image.onload = () => { 
+      image.classList.remove("hide"); 
+      image.classList.add("show"); 
+    }; 
+    title.classList.remove("hide"); 
+  }, 250); 
 }
 
 showImage(0);
 
+setTimeout(() => { 
+  document .querySelector('[data-index="0"]') 
+  ?.classList.add('active'); 
+}, 0);
+
 images.forEach((item, index) => {
   const button = document.createElement("button");
   button.textContent = item.label;
+  button.classList.add("gameButton"); 
+  button.dataset.index = index;
 
   button.addEventListener("click", () => {
     showImage(index);

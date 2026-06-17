@@ -157,33 +157,71 @@
 
     /* ── CHARACTER PANEL ── */
     .char-panel {
-      position: relative; z-index: 1;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px 24px 60px;
-    }
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 24px 60px;
+    min-height: 900px;
+    perspective: 1200px;
+  }
 
     .char-card {
-      display: none;
-      animation: revealCard 0.5s ease both;
-    }
-    .char-card.visible { display: grid; }
+    position: absolute;
+    top: 20px;
+    left: 24px;
+    right: 24px;
 
-    @keyframes revealCard {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 36px;
+    align-items: start;
 
-    .char-card {
-      grid-template-columns: 280px 1fr;
-      gap: 36px;
-      align-items: start;
-      background: linear-gradient(135deg, rgba(36,51,36,0.9), rgba(26,46,26,0.6));
-      border: 1px solid rgba(201,162,39,0.3);
-      border-radius: 4px;
-      padding: 36px;
-      box-shadow: 0 0 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(201,162,39,0.1);
-    }
+    background: linear-gradient(
+      135deg,
+      rgba(36,51,36,0.9),
+      rgba(26,46,26,0.6)
+    );
+
+    border: 1px solid rgba(201,162,39,0.3);
+    border-radius: 4px;
+    padding: 36px;
+
+    box-shadow:
+      0 0 60px rgba(0,0,0,0.6),
+      inset 0 1px 0 rgba(201,162,39,0.1);
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transform:
+      translateX(40px)
+      rotateY(-8deg);
+
+    transition:
+      opacity 0.45s ease,
+      transform 0.45s ease,
+      visibility 0.45s ease;
+  }
+
+  .char-card.visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    z-index: 2;
+
+    transform:
+      translateX(0)
+      rotateY(0deg);
+  }
+
+  .char-card.visible {
+    box-shadow:
+      0 0 80px rgba(201,162,39,0.18),
+      0 0 30px rgba(201,162,39,0.15),
+      inset 0 1px 0 rgba(201,162,39,0.15);
+  }
 
     @media (max-width: 640px) {
       .char-card { grid-template-columns: 1fr; }
@@ -291,10 +329,20 @@
 
     /* ── EMPTY STATE ── */
     .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      color: rgba(240,230,200,0.35);
-    }
+    text-align: center;
+    padding: 60px 20px;
+    color: rgba(240,230,200,0.35);
+
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s ease;
+  }
+
+  .empty-state.hidden {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+  }
     .empty-state svg { margin: 0 auto 20px; display: block; }
     .empty-state p { font-family: 'Cinzel', serif; font-size: 0.85rem; letter-spacing: 0.15em; }
 
@@ -609,38 +657,51 @@
 </footer>
 
 <script>
-  const buttons = document.querySelectorAll('.char-btn');
-  const cards   = document.querySelectorAll('.char-card');
-  const empty   = document.getElementById('emptyState');
-  let active    = null;
+const buttons = document.querySelectorAll('.char-btn');
+const cards = document.querySelectorAll('.char-card');
+const empty = document.getElementById('emptyState');
 
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const charId = btn.dataset.char;
-      const target = document.getElementById('card-' + charId);
+let active = null;
 
-      // Deactivate current
-      buttons.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
-      cards.forEach(c => c.classList.remove('visible'));
+buttons.forEach(btn => {
+  btn.addEventListener('click', () => {
 
-      if (active === charId) {
-        // Toggle off
-        active = null;
-        empty.style.display = '';
-      } else {
-        active = charId;
-        btn.classList.add('active');
-        btn.setAttribute('aria-pressed','true');
-        empty.style.display = 'none';
-        // Re-trigger animation
-        target.classList.remove('visible');
-        void target.offsetWidth;
-        target.classList.add('visible');
-        // Smooth scroll on mobile
-        target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
+    const charId = btn.dataset.char;
+    const target = document.getElementById(`card-${charId}`);
+
+    buttons.forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-pressed', 'false');
+    });
+
+    if (active === charId) {
+
+      active = null;
+
+      cards.forEach(card => {
+        card.classList.remove('visible');
+      });
+
+      empty.classList.remove('hidden');
+      return;
+    }
+
+    active = charId;
+
+    btn.classList.add('active');
+    btn.setAttribute('aria-pressed', 'true');
+
+    empty.classList.add('hidden');
+
+    cards.forEach(card => {
+      card.classList.remove('visible');
+    });
+
+    requestAnimationFrame(() => {
+      target.classList.add('visible');
     });
   });
+});
 </script>
 </body>
 </html>
