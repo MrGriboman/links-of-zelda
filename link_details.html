@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legend of Zelda Links</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cinzel+Decorative:wght@700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --forest:   #0f1f0f;
+  --deep:     #1a2e1a;
+  --mid:      #243324;
+  --parchment:#f0e6c8;
+  --aged:     #d9c9a0;
+  --gold:     #c9a227;
+  --bright-gold: #f0c040;
+  --copper:   #8b5e3c;
+  --shadow:   rgba(0,0,0,0.7);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--forest);
+  color: var(--parchment);
+  font-family: 'Crimson Text', serif;
+  font-size: 18px;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ── Triforce watermark ── */
+.triforce-bg {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(60vw, 60vh);
+  height: min(60vw, 60vh);
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
+  animation: tfPulse 6s ease-in-out infinite;
+}
+@keyframes tfPulse {
+  0%,100% { opacity: 0.04; transform: translate(-50%,-50%) scale(1); }
+  50%      { opacity: 0.07; transform: translate(-50%,-50%) scale(1.03); }
+}
+
+/* ── HEADER / HERO ── */
+header.hero {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 60px 20px 40px;
+  border-bottom: 2px solid var(--gold);
+}
+header.hero::after {
+  content: '';
+  display: block;
+  width: 80px; height: 2px;
+  background: var(--gold);
+  margin: 20px auto 0;
+}
+
+.hero-eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.35em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+header.hero h1 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(2rem, 6vw, 4.2rem);
+  font-weight: 700;
+  color: var(--bright-gold);
+  text-shadow: 0 0 40px rgba(201,162,39,0.5), 0 2px 0 rgba(0,0,0,0.8);
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+
+header.hero p {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.85rem, 2vw, 1.05rem);
+  color: var(--aged);
+  letter-spacing: 0.15em;
+  margin-top: 10px;
+}
+
+.triforce-hero {
+  width: 70px; height: 70px;
+  margin: 0 auto 22px;
+  display: block;
+  filter: drop-shadow(0 0 12px var(--gold));
+}
+
+main {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: auto;
+  padding: 40px 30px;
+}
+
+.top-link-wrap {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+a.legend-link {
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--forest);
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 3px;
+  background: linear-gradient(135deg, var(--bright-gold), var(--gold));
+  border: 1px solid var(--copper);
+  box-shadow: 0 0 20px rgba(201,162,39,0.15);
+  transition: box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+a.legend-link:hover {
+  box-shadow: 0 0 25px rgba(240,192,64,0.5);
+  transform: translateY(-2px);
+}
+
+.viewer {
+  background: linear-gradient(135deg, rgba(36,51,36,0.9), rgba(26,46,26,0.6));
+  border: 1px solid rgba(201,162,39,0.3);
+  border-radius: 4px;
+  padding: 36px;
+  box-shadow: 0 0 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(201,162,39,0.1);
+}
+
+#gameTitle {
+  text-align: center;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(1.4rem, 3.5vw, 2.1rem);
+  font-weight: 700;
+  color: var(--bright-gold);
+  text-shadow: 0 0 20px rgba(201,162,39,0.3);
+  margin-bottom: 24px;
+  transition: opacity .35s ease, transform .35s ease;
+}
+
+#gameTitle.hide {
+  opacity: 0;
+  transform: translateY(-12px);
+}
+
+.imageContainer {
+  display: flex;
+  justify-content: center;
+  perspective: 1500px;
+}
+
+#mainImage {
+  max-width: 100%;
+  max-height: 650px;
+  border: 2px solid var(--gold);
+  border-radius: 3px;
+  background: var(--deep);
+  padding: 10px;
+  box-shadow: 0 0 30px rgba(201,162,39,0.2);
+  opacity: 1;
+  backface-visibility: hidden;
+  transition: opacity .45s ease, transform .55s ease, filter .45s ease;
+}
+
+#mainImage.show {
+  opacity: 1;
+  filter: blur(0);
+  transform: rotateY(0deg) scale(1);
+}
+
+#mainImage.hide {
+  opacity: 0;
+  filter: blur(4px);
+  transform: rotateY(180deg) scale(.9);
+}
+
+#mainImage:hover {
+  transform: scale(1.02);
+}
+
+/* ── Prev / Next controls (styled like char-nav, less "web button" feel) ── */
+.navButtons {
+  margin-top: 26px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+}
+
+.navArrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--aged);
+  padding: 8px 4px;
+  transition: color 0.25s ease, transform 0.2s ease;
+}
+
+.navArrow:hover {
+  color: var(--bright-gold);
+  transform: translateY(-2px);
+}
+
+.navArrow svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.navDivider {
+  width: 1px;
+  height: 22px;
+  background: rgba(201,162,39,0.3);
+}
+
+/* ── Game select buttons (echoes char-nav portraits, but label-only chips) ── */
+#buttons {
+  margin-top: 34px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(201,162,39,0.2);
+}
+
+.gameButton {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--parchment);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(201,162,39,0.4);
+  border-radius: 3px;
+  padding: 11px 16px;
+  cursor: pointer;
+  transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+.gameButton:hover {
+  color: var(--bright-gold);
+  border-color: var(--gold);
+  background: rgba(255,255,255,0.1);
+  transform: translateY(-2px);
+}
+
+.gameButton.active {
+  color: var(--forest);
+  background: linear-gradient(135deg, var(--bright-gold), var(--gold));
+  border-color: var(--bright-gold);
+  box-shadow: 0 0 18px rgba(201,162,39,0.4);
+  transform: translateY(-2px);
+}
+
+footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 24px;
+  border-top: 1px solid rgba(201,162,39,0.2);
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: rgba(201,162,39,0.5);
+}
+</style>
+</head>
+<body>
+
+<svg class="triforce-bg" viewBox="0 0 100 87" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <polygon points="25,43.5 50,0 75,43.5" fill="#c9a227"/>
+  <polygon points="0,87 25,43.5 50,87" fill="#c9a227"/>
+  <polygon points="50,87 75,43.5 100,87" fill="#c9a227"/>
+</svg>
+
+<header class="hero">
+  <svg class="triforce-hero" viewBox="0 0 100 87" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <polygon points="25,43.5 50,0 75,43.5" fill="#c9a227"/>
+    <polygon points="0,87 25,43.5 50,87" fill="#c9a227"/>
+    <polygon points="50,87 75,43.5 100,87" fill="#c9a227"/>
+  </svg>
+  <p class="hero-eyebrow">The Hero of Hyrule</p>
+  <h1>Legend of Zelda Links</h1>
+  <p>Explore Link's appearance throughout the series</p>
+</header>
+
+<main>
+  <div class="top-link-wrap">
+    <a class="legend-link" href="details.html">More about the Legend of Zelda</a>
+  </div>
+
+  <div class="viewer">
+
+    <div id="gameTitle"></div>
+
+    <div class="imageContainer">
+      <img id="mainImage" alt="Link">
+    </div>
+
+    <div class="navButtons">
+      <button id="prevBtn" class="navArrow" aria-label="Previous game">
+        <svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        Previous
+      </button>
+      <div class="navDivider"></div>
+      <button id="nextBtn" class="navArrow" aria-label="Next game">
+        Next
+        <svg viewBox="0 0 24 24"><path d="M8.59 16.59 10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg>
+      </button>
+    </div>
+
+    <div id="buttons"></div>
+
+  </div>
+</main>
+
+<footer>
+  HYAAAAH!
+</footer>
+
+<script>
+const images = [
+  {
+    label: "The Legend of Zelda (1986)",
+    url: "images/1986.png"
+  },
+  {
+    label: "Adventure of Link",
+    url: "images/zelda2.png"
+  },
+  {
+    label: "A Link to the Past",
+    url: "images/alttp.png"
+  },
+  {
+    label: "Link's Awakening",
+    url: "images/la.png"
+  },
+  {
+    label: "Ocarina of Time",
+    url: "https://cdn.wikimg.net/en/zeldawiki/images/5/51/OoT_Link_Model.png"
+  },
+  {
+    label: "The Wind Waker",
+    url: "https://cdn.wikimg.net/en/zeldawiki/images/7/7b/TWW_Link_Model.png"
+  },
+  {
+    label: "The Minish Cap",
+    url: "images/tmc.png"
+  },
+  {
+    label: "Twilight Princess",
+    url: "https://cdn.wikimg.net/en/zeldawiki/images/8/88/TPHD_Link_Model.png"
+  },
+  {
+    label: "Phantom Hourglass",
+    url: "https://cdn.wikimg.net/en/zeldawiki/images/d/df/PH_Link_Model.png"
+  },
+  {
+    label: "Spirit Tracks",
+    url: "https://cdn.wikimg.net/en/zeldawiki/images/1/1a/ST_Link_Engineer%27s_Clothes_Model.png"
+  },
+  {
+    label: "Skyward Sword",
+    url: "https://cdn.wikimg.net/en/zeldawiki/images/4/46/SSHD_Link_Model.png"
+  },
+  {
+    label: "A Link Between Worlds",
+    url: "images/albw.png"
+  },
+  {
+    label: "Breath of the Wild",
+    url: "https://cdn.wikimg.net/en/zeldawiki/images/7/73/BotW_Link_Model.png"
+  },
+  {
+    label: "Link's Awakening Remake",
+    url: "https://cdn.wikimg.net/en/zeldawiki/images/4/48/LANS_Link_Model.png"
+  },
+  {
+    label: "Tears of the Kingdom",
+    url: "images/totk.png"
+  }
+];
+
+const image = document.getElementById("mainImage");
+image.classList.add("show");
+const buttons = document.getElementById("buttons");
+const title = document.getElementById("gameTitle");
+
+let currentIndex = 0;
+
+function showImage(index) { 
+  currentIndex = index; 
+  image.classList.remove("show"); 
+  image.classList.add("hide"); 
+  title.classList.add("hide"); 
+  setTimeout(() => { 
+    image.src = images[index].url; 
+    title.textContent = images[index].label; 
+    document.querySelectorAll(".gameButton").forEach(btn => { 
+      btn.classList.remove("active"); 
+  }); 
+  document 
+    .querySelector(`[data-index="${index}"]`) 
+    ?.classList.add("active"); 
+    image.onload = () => { 
+      image.classList.remove("hide"); 
+      image.classList.add("show"); 
+    }; 
+    title.classList.remove("hide"); 
+  }, 250); 
+}
+
+showImage(0);
+
+setTimeout(() => { 
+  document .querySelector('[data-index="0"]') 
+  ?.classList.add('active'); 
+}, 0);
+
+images.forEach((item, index) => {
+  const button = document.createElement("button");
+  button.textContent = item.label;
+  button.classList.add("gameButton"); 
+  button.dataset.index = index;
+
+  button.addEventListener("click", () => {
+    showImage(index);
+  });
+
+  buttons.appendChild(button);
+});
+
+document.getElementById("prevBtn").addEventListener("click", () => {
+  showImage((currentIndex - 1 + images.length) % images.length);
+});
+
+document.getElementById("nextBtn").addEventListener("click", () => {
+  showImage((currentIndex + 1) % images.length);
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowLeft") {
+    showImage((currentIndex - 1 + images.length) % images.length);
+  }
+
+  if (event.key === "ArrowRight") {
+    showImage((currentIndex + 1) % images.length);
+  }
+});
+</script>
+
+</body>
+</html>

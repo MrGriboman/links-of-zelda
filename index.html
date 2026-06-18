@@ -1,325 +1,770 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Legend of Zelda Links</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Legend of Zelda — Characters of Hyrule</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cinzel+Decorative:wght@700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-<style>
-* {
-  box-sizing: border-box;
-}
+    :root {
+      --forest:   #0f1f0f;
+      --deep:     #1a2e1a;
+      --mid:      #243324;
+      --parchment:#f0e6c8;
+      --aged:     #d9c9a0;
+      --gold:     #c9a227;
+      --bright-gold: #f0c040;
+      --copper:   #8b5e3c;
+      --shadow:   rgba(0,0,0,0.7);
+    }
 
-body {
-  margin: 0;
-  font-family: "Trebuchet MS", Arial, sans-serif;
-  color: white;
-  background:
-    radial-gradient(circle at top, #315031 0%, #1b2e1b 40%, #0b120b 100%);
-  min-height: 100vh;
-}
+    html { scroll-behavior: smooth; }
 
-header {
-  text-align: center;
-  padding: 40px 20px;
-  border-bottom: 3px solid gold;
-  background: rgba(0,0,0,.35);
-}
+    body {
+      background-color: var(--forest);
+      color: var(--parchment);
+      font-family: 'Crimson Text', serif;
+      font-size: 18px;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
 
-header h1 {
-  margin: 0;
-  font-size: 3rem;
-  color: gold;
-  text-shadow: 0 0 20px rgba(255,215,0,.5);
-}
+    /* ── Triforce watermark ── */
+    .triforce-bg {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(60vw, 60vh);
+      height: min(60vw, 60vh);
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 0;
+      animation: tfPulse 6s ease-in-out infinite;
+    }
+    @keyframes tfPulse {
+      0%,100% { opacity: 0.04; transform: translate(-50%,-50%) scale(1); }
+      50%      { opacity: 0.07; transform: translate(-50%,-50%) scale(1.03); }
+    }
 
-header p {
-  color: #ddd;
-  margin-top: 10px;
-}
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 60px 20px 40px;
+      border-bottom: 2px solid var(--gold);
+    }
+    .hero::after {
+      content: '';
+      display: block;
+      width: 80px; height: 2px;
+      background: var(--gold);
+      margin: 20px auto 0;
+    }
 
-main {
-  max-width: 1400px;
-  margin: auto;
-  padding: 30px;
-}
+    .hero-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.35em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
 
-.viewer {
-  background: rgba(255,255,255,.05);
-  border: 2px solid rgba(255,215,0,.3);
-  border-radius: 20px;
-  padding: 30px;
-  box-shadow: 0 0 30px rgba(0,0,0,.4);
-}
+    .hero-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(2rem, 6vw, 4.2rem);
+      font-weight: 700;
+      color: var(--bright-gold);
+      text-shadow: 0 0 40px rgba(201,162,39,0.5), 0 2px 0 rgba(0,0,0,0.8);
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+    .hero-title span {
+      color: var(--parchment);
+      text-shadow: 0 2px 0 rgba(0,0,0,0.8);
+    }
 
-#gameTitle { 
-  text-align: center; 
-  font-size: 2rem; 
-  color: gold; 
-  margin-bottom: 20px; 
-  font-weight: bold; 
-  transition: opacity .35s ease, transform .35s ease; 
-} 
+    .hero-sub {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(0.85rem, 2vw, 1.05rem);
+      color: var(--aged);
+      letter-spacing: 0.15em;
+      margin-top: 10px;
+    }
 
-#gameTitle.hide { 
-  opacity: 0; 
-  transform: translateY(-12px); 
-}
+    /* ── TRIFORCE SVG inline ── */
+    .triforce-hero {
+      width: 80px; height: 80px;
+      margin: 0 auto 22px;
+      display: none;
+      filter: drop-shadow(0 0 12px var(--gold));
+    }
 
-.imageContainer { 
-  display: flex;
-  justify-content: center;
-  perspective: 1500px; 
-}
+    /* ── CHARACTER NAV ── */
+    .char-nav {
+      position: relative; z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      padding: 36px 24px 28px;
+      background: linear-gradient(to bottom, var(--deep), var(--forest));
+    }
 
-#mainImage { max-width: 100%;
-  max-height: 650px;
-  border-radius: 12px;
-  background: white; 
-  padding: 10px; 
-  box-shadow: 0 0 25px rgba(255,255,255,.15), 0 0 50px rgba(255,215,0,.08); 
-  opacity: 1; 
-  backface-visibility: hidden;
-  transition: opacity .45s ease, transform .55s ease, filter .45s ease; 
-} 
+    .char-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: transform 0.2s;
+    }
+    .char-btn:hover { transform: translateY(-4px); }
+    .char-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 4px; }
 
-#mainImage.show { 
-  opacity: 1; 
-  filter: blur(0); 
-  transform: rotateY(0deg) scale(1); 
-} 
+    .char-btn.active .btn-portrait { border-color: var(--bright-gold); box-shadow: 0 0 18px var(--gold), inset 0 0 8px rgba(201,162,39,0.15); }
+    .char-btn.active .btn-label { color: var(--bright-gold); }
 
-#mainImage.hide { 
-  opacity: 0; 
-  filter: blur(4px); 
-  transform: rotateY(180deg) scale(.9); 
-} 
+    .btn-portrait {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      border: 2px solid var(--copper);
+      overflow: hidden;
+      background: var(--mid);
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .btn-portrait img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
 
-#mainImage:hover { 
-  transform: scale(1.02); 
-}
+    .btn-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--aged);
+      text-transform: uppercase;
+      transition: color 0.25s;
+    }
 
-.navButtons {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
+    /* ── CHARACTER PANEL ── */
+    .char-panel {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 24px 60px;
+    min-height: 900px;
+    perspective: 1200px;
+  }
 
-#buttons {
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
+    .char-card {
+    position: absolute;
+    top: 20px;
+    left: 24px;
+    right: 24px;
 
-button {
-  background: linear-gradient(#e4c34b, #b18a12);
-  color: #111;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all .2s ease;
-}
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    column-gap: 36px;
+    align-items: start;
 
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 15px gold;
-}
+    background: linear-gradient(
+      135deg,
+      rgba(36,51,36,0.9),
+      rgba(26,46,26,0.6)
+    );
 
-.gameButton.active { 
-  box-shadow: 0 0 18px gold, 0 0 35px rgba(255,215,0,.4); 
-  transform: translateY(-2px); 
-}
+    border: 1px solid rgba(201,162,39,0.3);
+    border-radius: 4px;
+    padding: 36px;
 
-footer {
-  text-align: center;
-  padding: 30px;
-  color: #bbb;
-}
+    box-shadow:
+      0 0 60px rgba(0,0,0,0.6),
+      inset 0 1px 0 rgba(201,162,39,0.1);
 
-a {
-  display: inline-block;
-  margin-bottom: 20px;
-  color: gold;
-  text-decoration: none;
-  font-weight: bold;
-  padding: 8px 14px;
-  border-radius: 8px;
-  background: linear-gradient(#e4c34b, #b18a12);
-}
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
 
-a:hover {
-  box-shadow: 0 0 15px gold;
-  transform: translateY(-2px);
-}
-</style>
+    transform:
+      translateX(40px)
+      rotateY(-8deg);
+
+    transition:
+      opacity 0.45s ease,
+      transform 0.45s ease,
+      visibility 0.45s ease;
+  }
+
+  .char-card.visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    z-index: 2;
+
+    transform:
+      translateX(0)
+      rotateY(0deg);
+  }
+
+  .char-card.visible {
+    box-shadow:
+      0 0 80px rgba(201,162,39,0.18),
+      0 0 30px rgba(201,162,39,0.15),
+      inset 0 1px 0 rgba(201,162,39,0.15);
+  }
+
+    @media (max-width: 640px) {
+      .char-card {
+        grid-template-columns: 1fr;
+      }
+      .char-card .card-portrait-col { grid-column: 1; }
+      .char-card .card-info { grid-column: 1; }
+    }
+
+    .card-portrait-col {
+      grid-column: 1;
+    }
+
+    /* portrait */
+    .card-image-wrap {
+      position: relative;
+      border: 2px solid var(--gold);
+      border-radius: 3px;
+      overflow: hidden;
+      background: var(--deep);
+      box-shadow: 0 0 30px rgba(201,162,39,0.2);
+    }
+    .card-image-wrap::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 70%, rgba(0,0,0,0.5) 100%);
+      z-index: 1; pointer-events: none;
+    }
+    .card-image-wrap img {
+      width: 100%; display: block;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    /* details button, sits directly under the portrait */
+    .card-details-link {
+      display: block;
+      margin-top: 12px;
+      width: 100%;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    /* info */
+    .card-info {
+      grid-column: 2;
+    }
+
+    .card-race-tag {
+      display: inline-block;
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--forest);
+      background: var(--gold);
+      padding: 3px 10px;
+      margin-bottom: 10px;
+    }
+
+    .card-name {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      color: var(--bright-gold);
+      text-shadow: 0 0 20px rgba(201,162,39,0.3);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .card-title-text {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      color: var(--copper);
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .card-divider {
+      width: 60px; height: 1px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      margin-bottom: 18px;
+    }
+
+    .card-bio {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--parchment);
+      margin-bottom: 22px;
+    }
+
+    .card-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 20px;
+    }
+
+    .stat-item {}
+    .stat-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2px;
+    }
+    .stat-value {
+      font-size: 0.95rem;
+      color: var(--aged);
+    }
+
+    .card-quote {
+      margin-top: 22px;
+      padding: 14px 20px;
+      border-left: 3px solid var(--gold);
+      background: rgba(0,0,0,0.2);
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--aged);
+      line-height: 1.6;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: rgba(240,230,200,0.35);
+
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s ease;
+  }
+
+  .empty-state.hidden {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+  }
+    .empty-state svg { margin: 0 auto 20px; display: block; }
+    .empty-state p { font-family: 'Cinzel', serif; font-size: 0.85rem; letter-spacing: 0.15em; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      text-align: center;
+      padding: 24px;
+      border-top: 1px solid rgba(201,162,39,0.2);
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: rgba(201,162,39,0.35);
+    }
+
+    a {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: gold;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: linear-gradient(#e4c34b, #b18a12);
+    }
+
+    a:hover {
+    box-shadow: 0 0 15px gold;
+    transform: translateY(-2px);
+    }
+
+    a.legend-link {
+    display: inline-block;
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--forest);
+    text-decoration: none;
+    padding: 12px 24px;
+    margin: 0 0 20px 24px;
+    border-radius: 3px;
+    background: linear-gradient(135deg, var(--bright-gold), var(--gold));
+    border: 1px solid var(--copper);
+    box-shadow: 0 0 20px rgba(201,162,39,0.15);
+    transition: box-shadow 0.25s ease, transform 0.2s ease;
+  }
+
+  a.legend-link:hover {
+    box-shadow: 0 0 25px rgba(240,192,64,0.5);
+    transform: translateY(-2px);
+  }
+
+  a.card-details-link {
+    margin: 0;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    padding: 10px 16px;
+  }
+  </style>
 </head>
 <body>
 
-<header>
-  <h1>⚔ Legend of Zelda Links ⚔</h1>
-  <p>Explore Link's appearance throughout the series</p>
+<!-- Background Triforce -->
+<svg class="triforce-bg" viewBox="0 0 100 87" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <polygon points="25,43.5 50,0 75,43.5" fill="#c9a227"/>
+  <polygon points="0,87 25,43.5 50,87" fill="#c9a227"/>
+  <polygon points="50,87 75,43.5 100,87" fill="#c9a227"/>
+</svg>
+
+
+<!-- HERO -->
+<header class="hero">
+  <svg class="triforce-hero" viewBox="0 0 100 87" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <polygon points="25,43.5 50,0 75,43.5" fill="#c9a227"/>
+    <polygon points="0,87 25,43.5 50,87" fill="#c9a227"/>
+    <polygon points="50,87 75,43.5 100,87" fill="#c9a227"/>
+  </svg>
+  <p class="hero-eyebrow">The Sacred Realm</p>
+  <h1 class="hero-title">The Legend of <span>Zelda</span></h1>
+  <p class="hero-sub">Characters of Hyrule</p>
 </header>
 
-<main>
-  <a href="details.html">More about Link</a>
-  <div class="viewer">
+<!-- CHARACTER NAV -->
+<nav class="char-nav" aria-label="Character selection">
+  <button class="char-btn" data-char="link" aria-pressed="false">
+    <span class="btn-portrait">
+      <img src="images/link.jpg" alt="Link"/>
+    </span>
+    <span class="btn-label">Link</span>
+  </button>
+  <button class="char-btn" data-char="zelda" aria-pressed="false">
+    <span class="btn-portrait">
+      <img src="images/zelda_icon.jpg" alt="Princess Zelda"/>
+    </span>
+    <span class="btn-label">Zelda</span>
+  </button>
+  <button class="char-btn" data-char="ganon" aria-pressed="false">
+    <span class="btn-portrait">
+      <img src="images/ganondorf.jpg" alt="Ganondorf"/>
+    </span>
+    <span class="btn-label">Ganondorf</span>
+  </button>
+  <button class="char-btn" data-char="impa" aria-pressed="false">
+    <span class="btn-portrait">
+      <img src="images/impa.jpg" alt="Impa"/>
+    </span>
+    <span class="btn-label">Impa</span>
+  </button>
+  <button class="char-btn" data-char="midna" aria-pressed="false">
+    <span class="btn-portrait">
+      <img src="images/midna.webp" alt="Midna"/>
+    </span>
+    <span class="btn-label">Midna</span>
+  </button>
+  <button class="char-btn" data-char="navi" aria-pressed="false">
+    <span class="btn-portrait">
+      <img src="images/navi.png" alt="Navi"/>
+    </span>
+    <span class="btn-label">Navi</span>
+  </button>
+</nav>
 
-    <div id="gameTitle"></div>
+<!-- CHARACTER PANEL -->
+<main class="char-panel">
 
-    <div class="imageContainer">
-      <img id="mainImage" alt="Link">
-    </div>
-
-    <div class="navButtons">
-      <button id="prevBtn">⬅ Previous</button>
-      <button id="nextBtn">Next ➡</button>
-    </div>
-
-    <div id="buttons"></div>
-
+  <div class="empty-state" id="emptyState">
+    <svg width="60" height="53" viewBox="0 0 100 87" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="25,43.5 50,0 75,43.5" fill="#c9a227"/>
+      <polygon points="0,87 25,43.5 50,87" fill="#c9a227"/>
+      <polygon points="50,87 75,43.5 100,87" fill="#c9a227"/>
+    </svg>
+    <p>Select a hero to reveal their legend</p>
   </div>
+
+  <!-- LINK -->
+  <article class="char-card" id="card-link">
+    <div class="card-portrait-col">
+    <div class="card-image-wrap">
+      <img src="images/link.jpg" alt="Link, the Hero of Hyrule"/>
+    </div>
+    <a class="legend-link card-details-link" href="link_details.html">Character's Details</a>
+    </div>
+    <div class="card-info">
+      <span class="card-race-tag">Hylian</span>
+      <h2 class="card-name">Link</h2>
+      <p class="card-title-text">The Hero of Hyrule · Bearer of the Triforce of Courage</p>
+      <div class="card-divider"></div>
+      <p class="card-bio">Link is the eternal champion of the Triforce of Courage, destined across countless ages to stand against the darkness threatening Hyrule. A young Hylian of few words but indomitable spirit, he wields the Master Sword — the Blade of Evil's Bane — and carries the hopes of an entire kingdom upon his shoulders. Whether born as a forest child in Kokiri Woods or awakened from a century-long slumber, Link's legend endures.</p>
+      <div class="card-stats">
+        <div class="stat-item">
+          <div class="stat-label">Weapon</div>
+          <div class="stat-value">Master Sword</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Triforce</div>
+          <div class="stat-value">Courage</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Homeland</div>
+          <div class="stat-value">Kokiri Forest / Hyrule</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">First Appearance</div>
+          <div class="stat-value">The Legend of Zelda (1986)</div>
+        </div>
+      </div>
+      <blockquote class="card-quote">"It is something that grows over time — a true friendship. A feeling in the heart that becomes even stronger over time."</blockquote>
+    </div>
+  </article>
+
+  <!-- ZELDA -->
+  <article class="char-card" id="card-zelda">
+    <div class="card-portrait-col">
+    <div class="card-image-wrap">
+      <img src="images/zelda_icon.jpg" alt="Princess Zelda"/>
+    </div>
+    <a class="legend-link card-details-link" href="index.html">Character's Details</a>
+    </div>
+    <div class="card-info">
+      <span class="card-race-tag">Hylian Royalty</span>
+      <h2 class="card-name">Zelda</h2>
+      <p class="card-title-text">Princess of Hyrule · Bearer of the Triforce of Wisdom</p>
+      <div class="card-divider"></div>
+      <p class="card-bio">Princess Zelda is the wise and graceful heir to the Hyrulean throne, bearer of the sacred Triforce of Wisdom. A gifted scholar and practitioner of ancient sealing magic, she carries the bloodline of the goddess Hylia herself. Though often portrayed as a figure to be rescued, Zelda is a formidable force in her own right — a strategist, prophetess, and guardian who shapes the fate of the Sacred Realm across every age.</p>
+      <div class="card-stats">
+        <div class="stat-item">
+          <div class="stat-label">Power</div>
+          <div class="stat-value">Sealing Magic</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Triforce</div>
+          <div class="stat-value">Wisdom</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Homeland</div>
+          <div class="stat-value">Hyrule Castle</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">First Appearance</div>
+          <div class="stat-value">The Legend of Zelda (1986)</div>
+        </div>
+      </div>
+      <blockquote class="card-quote">"Whether it is the wind of the sea or the wind of the earth, hope must guide our steps."</blockquote>
+    </div>
+  </article>
+
+  <!-- GANONDORF -->
+  <article class="char-card" id="card-ganon">
+    <div class="card-portrait-col">
+    <div class="card-image-wrap">
+      <img src="images/ganondorf.jpg" alt="Ganondorf, the Demon King"/>
+    </div>
+    <a class="legend-link card-details-link" href="index.html">Character's Details</a>
+    </div>
+    <div class="card-info">
+      <span class="card-race-tag">Gerudo</span>
+      <h2 class="card-name">Ganondorf</h2>
+      <p class="card-title-text">The Demon King · Bearer of the Triforce of Power</p>
+      <div class="card-divider"></div>
+      <p class="card-bio">Ganondorf is the King of Evil, the Gerudo sorcerer who obtained the Triforce of Power and bent it to his will. Born once each century to the all-female Gerudo tribe, he turned his gift of leadership into an instrument of conquest. Driven by a relentless hunger for dominion over Hyrule, he has clashed with the Hero and the Princess across every cycle of the eternal triangle. In his most monstrous form, he becomes Ganon — the Dark Beast.</p>
+      <div class="card-stats">
+        <div class="stat-item">
+          <div class="stat-label">Power</div>
+          <div class="stat-value">Dark Magic, Sorcery</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Triforce</div>
+          <div class="stat-value">Power</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Homeland</div>
+          <div class="stat-value">Gerudo Desert</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">First Appearance</div>
+          <div class="stat-value">Zelda II (1987)</div>
+        </div>
+      </div>
+      <blockquote class="card-quote">"Do not think that this ends here... The history of light and shadow will be written in blood!"</blockquote>
+    </div>
+  </article>
+
+  <!-- IMPA -->
+  <article class="char-card" id="card-impa">
+    <div class="card-portrait-col">
+    <div class="card-image-wrap">
+      <img src="images/impa.jpg" alt="Impa of the Sheikah"/>
+    </div>
+    <a class="legend-link card-details-link" href="index.html">Character's Details</a>
+    </div>
+    <div class="card-info">
+      <span class="card-race-tag">Sheikah</span>
+      <h2 class="card-name">Impa</h2>
+      <p class="card-title-text">Guardian of the Royal Family · Shadow Warrior</p>
+      <div class="card-divider"></div>
+      <p class="card-bio">Impa is the eternal guardian of the Hyrulean royal family, a shadow warrior of the ancient Sheikah clan. Fiercely loyal and formidably skilled, she has protected Princess Zelda across countless generations — sometimes as a stoic elder, sometimes as a battle-hardened warrior. The Sheikah are Hyrule's eye in the dark, and Impa is their most trusted blade. Her red eyes hold centuries of devotion and duty.</p>
+      <div class="card-stats">
+        <div class="stat-item">
+          <div class="stat-label">Clan</div>
+          <div class="stat-value">Sheikah</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Role</div>
+          <div class="stat-value">Royal Guardian</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Homeland</div>
+          <div class="stat-value">Kakariko Village</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">First Appearance</div>
+          <div class="stat-value">The Legend of Zelda (1986)</div>
+        </div>
+      </div>
+      <blockquote class="card-quote">"Shadow and light are two sides of the same coin, one cannot exist without the other."</blockquote>
+    </div>
+  </article>
+
+  <!-- MIDNA -->
+  <article class="char-card" id="card-midna">
+    <div class="card-portrait-col">
+    <div class="card-image-wrap">
+      <img src="images/midna.webp" alt="Midna, Princess of the Twilight Realm"/>
+    </div>
+    <a class="legend-link card-details-link" href="index.html">Character's Details</a>
+    </div>
+    <div class="card-info">
+      <span class="card-race-tag">Twili</span>
+      <h2 class="card-name">Midna</h2>
+      <p class="card-title-text">Twilight Princess · Ruler of the Twilight Realm</p>
+      <div class="card-divider"></div>
+      <p class="card-bio">Midna is the impish, quick-tongued ruler of the Twilight Realm, cursed into an imp form by the usurper Zant. Cynical and self-serving at first, she formed an unlikely bond with Link over their shared journey through shadow and light. Behind her sardonic wit lies a fierce and heartbroken queen — one who ultimately chose sacrifice over dominion. She is perhaps the most complex companion in the entire Zelda series.</p>
+      <div class="card-stats">
+        <div class="stat-item">
+          <div class="stat-label">Realm</div>
+          <div class="stat-value">Twilight Realm</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Magic</div>
+          <div class="stat-value">Fused Shadow</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Homeland</div>
+          <div class="stat-value">Twilight Realm</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">First Appearance</div>
+          <div class="stat-value">Twilight Princess (2006)</div>
+        </div>
+      </div>
+      <blockquote class="card-quote">"I'm Midna. Remember that, because it's the only nice thing I'll do for you."</blockquote>
+    </div>
+  </article>
+
+  <!-- NAVI -->
+  <article class="char-card" id="card-navi">
+    <div class="card-portrait-col">
+    <div class="card-image-wrap">
+      <img src="images/navi.png" alt="Navi the Fairy"/>
+    </div>
+    <a class="legend-link card-details-link" href="index.html">Character's Details</a>
+    </div>
+    <div class="card-info">
+      <span class="card-race-tag">Great Fairy</span>
+      <h2 class="card-name">Navi</h2>
+      <p class="card-title-text">Fairy Companion · Voice of the Great Deku Tree</p>
+      <div class="card-divider"></div>
+      <p class="card-bio">Navi is the fairy companion sent by the Great Deku Tree to guide the young Link on his first great adventure. Radiant with purpose and tireless in encouragement, she introduced a generation of players to Hyrule with her luminous chime and urgent cries. Though often the subject of fond parody, Navi's guidance was genuine — she gave Link his eyes in the darkness, and her absence at the game's end resonated with quiet sorrow.</p>
+      <div class="card-stats">
+        <div class="stat-item">
+          <div class="stat-label">Type</div>
+          <div class="stat-value">Kokiri Fairy</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Ability</div>
+          <div class="stat-value">Z-Targeting Guidance</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Homeland</div>
+          <div class="stat-value">Kokiri Forest</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">First Appearance</div>
+          <div class="stat-value">Ocarina of Time (1998)</div>
+        </div>
+      </div>
+      <blockquote class="card-quote">"Hey! Listen! The Great Deku Tree wants to talk with you, Link!"</blockquote>
+    </div>
+  </article>
+
 </main>
 
 <footer>
-  HYAAAAH!
+  &copy; Nintendo · Fan tribute — not affiliated with or endorsed by Nintendo Co., Ltd.
 </footer>
 
 <script>
-const images = [
-  {
-    label: "The Legend of Zelda (1986)",
-    url: "images/1986.png"
-  },
-  {
-    label: "Adventure of Link",
-    url: "images/zelda2.png"
-  },
-  {
-    label: "A Link to the Past",
-    url: "images/alttp.png"
-  },
-  {
-    label: "Link's Awakening",
-    url: "images/la.png"
-  },
-  {
-    label: "Ocarina of Time",
-    url: "https://cdn.wikimg.net/en/zeldawiki/images/5/51/OoT_Link_Model.png"
-  },
-  {
-    label: "The Wind Waker",
-    url: "https://cdn.wikimg.net/en/zeldawiki/images/7/7b/TWW_Link_Model.png"
-  },
-  {
-    label: "The Minish Cap",
-    url: "images/tmc.png"
-  },
-  {
-    label: "Twilight Princess",
-    url: "https://cdn.wikimg.net/en/zeldawiki/images/8/88/TPHD_Link_Model.png"
-  },
-  {
-    label: "Phantom Hourglass",
-    url: "https://cdn.wikimg.net/en/zeldawiki/images/d/df/PH_Link_Model.png"
-  },
-  {
-    label: "Spirit Tracks",
-    url: "https://cdn.wikimg.net/en/zeldawiki/images/1/1a/ST_Link_Engineer%27s_Clothes_Model.png"
-  },
-  {
-    label: "Skyward Sword",
-    url: "https://cdn.wikimg.net/en/zeldawiki/images/4/46/SSHD_Link_Model.png"
-  },
-  {
-    label: "A Link Between Worlds",
-    url: "images/albw.png"
-  },
-  {
-    label: "Breath of the Wild",
-    url: "https://cdn.wikimg.net/en/zeldawiki/images/7/73/BotW_Link_Model.png"
-  },
-  {
-    label: "Link's Awakening Remake",
-    url: "https://cdn.wikimg.net/en/zeldawiki/images/4/48/LANS_Link_Model.png"
-  },
-  {
-    label: "Tears of the Kingdom",
-    url: "images/totk.png"
-  }
-];
+const buttons = document.querySelectorAll('.char-btn');
+const cards = document.querySelectorAll('.char-card');
+const empty = document.getElementById('emptyState');
 
-const image = document.getElementById("mainImage");
-image.classList.add("show");
-const buttons = document.getElementById("buttons");
-const title = document.getElementById("gameTitle");
+let active = null;
 
-let currentIndex = 0;
+buttons.forEach(btn => {
+  btn.addEventListener('click', () => {
 
-function showImage(index) { 
-  currentIndex = index; 
-  image.classList.remove("show"); 
-  image.classList.add("hide"); 
-  title.classList.add("hide"); 
-  setTimeout(() => { 
-    image.src = images[index].url; 
-    title.textContent = images[index].label; 
-    document.querySelectorAll(".gameButton").forEach(btn => { 
-      btn.classList.remove("active"); 
-  }); 
-  document 
-    .querySelector(`[data-index="${index}"]`) 
-    ?.classList.add("active"); 
-    image.onload = () => { 
-      image.classList.remove("hide"); 
-      image.classList.add("show"); 
-    }; 
-    title.classList.remove("hide"); 
-  }, 250); 
-}
+    const charId = btn.dataset.char;
+    const target = document.getElementById(`card-${charId}`);
 
-showImage(0);
+    buttons.forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-pressed', 'false');
+    });
 
-setTimeout(() => { 
-  document .querySelector('[data-index="0"]') 
-  ?.classList.add('active'); 
-}, 0);
+    if (active === charId) {
 
-images.forEach((item, index) => {
-  const button = document.createElement("button");
-  button.textContent = item.label;
-  button.classList.add("gameButton"); 
-  button.dataset.index = index;
+      active = null;
 
-  button.addEventListener("click", () => {
-    showImage(index);
+      cards.forEach(card => {
+        card.classList.remove('visible');
+      });
+
+      empty.classList.remove('hidden');
+      return;
+    }
+
+    active = charId;
+
+    btn.classList.add('active');
+    btn.setAttribute('aria-pressed', 'true');
+
+    empty.classList.add('hidden');
+
+    cards.forEach(card => {
+      card.classList.remove('visible');
+    });
+
+    requestAnimationFrame(() => {
+      target.classList.add('visible');
+    });
   });
-
-  buttons.appendChild(button);
-});
-
-document.getElementById("prevBtn").addEventListener("click", () => {
-  showImage((currentIndex - 1 + images.length) % images.length);
-});
-
-document.getElementById("nextBtn").addEventListener("click", () => {
-  showImage((currentIndex + 1) % images.length);
-});
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "ArrowLeft") {
-    showImage((currentIndex - 1 + images.length) % images.length);
-  }
-
-  if (event.key === "ArrowRight") {
-    showImage((currentIndex + 1) % images.length);
-  }
 });
 </script>
-
 </body>
 </html>
